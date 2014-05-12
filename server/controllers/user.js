@@ -13,5 +13,15 @@ module.exports = {
             delete user.linkedin;
         });
         res.json(users);
+    },
+    getMyDetails: function(req, res) {
+        console.log(req.session.token);
+        res.json({
+        "nickName": "Sample User",
+        "userCircleValueId": "1",
+        "userCircleValueDisplay": "Bakfy",
+        "profilePic":"",
+        "profilePicDisplay":""
+        });
     }
 };

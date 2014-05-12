@@ -18,7 +18,6 @@ angular.module('angular-client-side-auth')
             if(role === undefined) {
                 role = currentUser.role;
             }
-
             return accessLevel.bitMask & role.bitMask;
         },
         isLoggedIn: function(user) {
@@ -59,6 +58,9 @@ angular.module('angular-client-side-auth')
     return {
         getAll: function(success, error) {
             $http.get('/users').success(success).error(error);
+        },
+        getProfileDetails: function(success, error) {
+          $http.get('/users/me').success(success).error(error);  
         }
     };
 });

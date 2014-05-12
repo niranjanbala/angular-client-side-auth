@@ -19,60 +19,6 @@ var routes = [
         }]
     },
 
-    // OAUTH
-    {
-        path: '/auth/twitter',
-        httpMethod: 'GET',
-        middleware: [passport.authenticate('twitter')]
-    },
-    {
-        path: '/auth/twitter/callback',
-        httpMethod: 'GET',
-        middleware: [passport.authenticate('twitter', {
-            successRedirect: '/',
-            failureRedirect: '/login'
-        })]
-    },
-    {
-        path: '/auth/facebook',
-        httpMethod: 'GET',
-        middleware: [passport.authenticate('facebook')]
-    },
-    {
-        path: '/auth/facebook/callback',
-        httpMethod: 'GET',
-        middleware: [passport.authenticate('facebook', {
-            successRedirect: '/',
-            failureRedirect: '/login'
-        })]
-    },
-    {
-        path: '/auth/google',
-        httpMethod: 'GET',
-        middleware: [passport.authenticate('google')]
-    },
-    {
-        path: '/auth/google/return',
-        httpMethod: 'GET',
-        middleware: [passport.authenticate('google', {
-            successRedirect: '/',
-            failureRedirect: '/login'
-        })]
-    },
-    {
-        path: '/auth/linkedin',
-        httpMethod: 'GET',
-        middleware: [passport.authenticate('linkedin')]
-    },
-    {
-        path: '/auth/linkedin/callback',
-        httpMethod: 'GET',
-        middleware: [passport.authenticate('linkedin', {
-            successRedirect: '/',
-            failureRedirect: '/login'
-        })]
-    },
-
     // Local Auth
     {
         path: '/register',
@@ -97,7 +43,12 @@ var routes = [
         middleware: [UserCtrl.index],
         accessLevel: accessLevels.admin
     },
-
+    {
+        path: '/users/me',
+        httpMethod: 'GET',
+        middleware: [UserCtrl.getMyDetails],
+        accessLevel: accessLevels.user
+    },
     // All other get requests should be handled by AngularJS's client-side routing system
     {
         path: '/*',
@@ -145,11 +96,12 @@ module.exports = function(app) {
 
 function ensureAuthorized(req, res, next) {
     var role;
-    if(!req.user) role = userRoles.public;
-    else          role = req.user.role;
-
+    if(!req.user) {
+        role = userRoles.public;
+    } else {
+        role = req.user.role;        
+    }
     var accessLevel = _.findWhere(routes, { path: req.route.path }).accessLevel || accessLevels.public;
-
-    if(!(accessLevel.bitMask & role.bitMask)) return res.send(403);
+    if(!(accessLevel.bitMask & role.bitMask)) return res.send(403);    
     return next();
 }

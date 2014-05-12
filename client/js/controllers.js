@@ -16,6 +16,26 @@ angular.module('angular-client-side-auth')
         });
     };
 }]);
+angular.module('angular-client-side-auth')
+.controller('ProfileCtrl', ['$rootScope', '$scope', '$location', 'Auth', 'Users', function($rootScope, $scope, $location, Auth, Users) {
+    $scope.user = Auth.user;
+    $scope.userRoles = Auth.userRoles;
+    $scope.accessLevels = Auth.accessLevels;
+
+    $scope.loadProfileDetails = function() {                
+        $scope.loading = true;
+        $scope.userRoles = Auth.userRoles;
+
+        Users.getProfileDetails(function(res) {
+            console.log(res);
+            $scope.users = res;
+            $scope.loading = false;
+        }, function(err) {
+            $rootScope.error = "Failed to fetch users.";
+            $scope.loading = false;
+        }); 
+    };
+}]);
 
 angular.module('angular-client-side-auth')
 .controller('LoginCtrl',
