@@ -16,6 +16,7 @@ module.exports = {
                 }
                 console.log(user);
                 req.session.token=user.token;
+                req.session.userId=user.id;
                 req.session.cookie.token=user.token;
                 if(req.body.rememberme) req.session.cookie.maxAge = 1000 * 60 * 60 * 24 * 7;                
                 res.json(200, { "role": user.role, "username": user.userName });

@@ -1,4 +1,7 @@
 div(class="jumbotron")
 	div(class="container")
 		div(class="panel")
-			div(class="panel-body" data-ng-controller="ProfileCtrl" data-ng-init="loadProfileDetails()")			
+			div(class="panel-body" data-ng-controller="ProfileCtrl" data-ng-init="loadProfileDetails()")		
+				<img ng-src="{{profilePicUrl}}"/>
+				<p>{{name}}</p>
+				<p>{{specialization}}</p>

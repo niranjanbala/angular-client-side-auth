@@ -28,7 +28,16 @@ angular.module('angular-client-side-auth')
 
         Users.getProfileDetails(function(res) {
             console.log(res);
-            $scope.users = res;
+            if(res.success==true) {
+                if(res.response.profilePicUrl.length>0) {
+                    $scope.profilePicUrl=res.response.profilePicUrl;
+                    $scope.name=res.response.userName;
+                    $scope.specialization=res.response.collegeName;
+                    //console.log($scope.profilePicUrl);
+                }                
+            } else {
+                //not able to load profile data;
+            }
             $scope.loading = false;
         }, function(err) {
             $rootScope.error = "Failed to fetch users.";
