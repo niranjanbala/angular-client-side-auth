@@ -26,8 +26,7 @@ angular.module('angular-client-side-auth')
         $scope.loading = true;
         $scope.userRoles = Auth.userRoles;
 
-        Users.getProfileDetails(function(res) {
-            console.log(res);
+        Users.getProfileDetails(function(res) {            
             if(res.success==true) {
                 if(res.response.profilePicUrl.length>0) {
                     $scope.profilePicUrl=res.response.profilePicUrl;
@@ -45,7 +44,36 @@ angular.module('angular-client-side-auth')
         }); 
     };
 }]);
+angular.module('angular-client-side-auth')
+.controller('FeedCtrl', ['$rootScope', '$scope', '$location', 'Auth', 'Feeds', function($rootScope, $scope, $location, Auth, Feeds) {
+    $scope.user = Auth.user;
+    $scope.userRoles = Auth.userRoles;
+    $scope.accessLevels = Auth.accessLevels;
 
+    $scope.loadFeedDetails = function() {                
+        $scope.loading = true;
+        $scope.userRoles = Auth.userRoles;        
+        Feeds.getFeedList(function(res) {            
+            if(res.success==true) {
+                $scope.feeds=res.response;                
+                console.log($scope.feeds);
+                //if(res.response.profilePicUrl.length>0) {
+                    
+                    //$scope.profilePicUrl=res.response.profilePicUrl;
+                    //$scope.name=res.response.userName;
+                    //$scope.specialization=res.response.collegeName;
+                    //console.log($scope.profilePicUrl);
+                //}                
+            } else {
+                //not able to load feed list;
+            }
+            $scope.loading = false;
+        }, function(err) {
+            $rootScope.error = "Failed to fetch users.";
+            $scope.loading = false;
+        }); 
+    };
+}]);
 angular.module('angular-client-side-auth')
 .controller('LoginCtrl',
 ['$rootScope', '$scope', '$location', '$window', 'Auth', function($rootScope, $scope, $location, $window, Auth) {

@@ -64,3 +64,11 @@ angular.module('angular-client-side-auth')
         }
     };
 });
+angular.module('angular-client-side-auth')
+.factory('Feeds', function($http) {
+    return {
+        getFeedList: function(success, error) {          
+          $http.get('/feeds/list').success(success).error(error);  
+        }
+    };
+});
