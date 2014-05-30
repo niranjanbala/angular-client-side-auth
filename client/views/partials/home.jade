@@ -1,12 +1,3 @@
-div(class="jumbotron")
-	div(class="container")
-		div(class="panel profile-panel")
-			div(class="panel-body" data-ng-controller="ProfileCtrl" data-ng-init="loadProfileDetails()")		
-				<img ng-src="{{profilePicUrl}}"/>
-				<p>{{name}}</p>
-				<p>{{specialization}}</p>
-		div(class="panel feed-panel")
-			div(class="panel-body" data-ng-controller="FeedCtrl" data-ng-init="loadFeedDetails()")
-				table.table.table-striped(data-ng-hide="loading")
-					tr(data-ng-repeat="feed in feeds.feeds")
-						td {{ feed.bakText }}
+link(href="netdna.bootstrapcdn.comfont-awesome4.0.3cssfont-awesome.min.css",rel="stylesheet")
+div(id="template-target")
+script(src='/js/main.js')

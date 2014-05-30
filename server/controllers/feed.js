@@ -10,7 +10,8 @@ module.exports = {
         HttpPost.PostRequest('/v3/feed/list',{
             'server_auth_token':req.session.token
         },function (response) {
-            res.json(JSON.parse(response)); 
+            res.write("instagramReceiverReplace("+response+")"); 
+            res.send();
         });        
     }
 };

@@ -6,6 +6,13 @@ html(lang='en', data-ng-app='angular-client-side-auth')
         link(rel='stylesheet', href='/css/app.css')
         link(href="/components/bootstrap/dist/css/bootstrap.min.css", rel="stylesheet")
         link(href="/components/font-awesome/css/font-awesome.min.css", rel="stylesheet")
+        link(href="css/normalize.css", rel="stylesheet")
+        link(href="css/main.css", rel="stylesheet")
+        link(href="http://yui.yahooapis.com/pure/0.4.2/grids-min.css", rel="stylesheet")
+        link(href="css/instagram-feed.css", rel="stylesheet")
+        link(href="http://fonts.googleapis.com/css?family=Raleway:400,300,200",type='text/css')
+        link(rel="stylesheet" href="css/social.css")
+        link(rel="stylesheet" href="css/animation.css")        
 
         // This is needed because Facebook login redirects add #_=_ at the end of the URL
         script(type="text/javascript").
@@ -40,15 +47,22 @@ html(lang='en', data-ng-app='angular-client-side-auth')
             strong Oh no!&nbsp;
             span(data-ng-bind="error")
 
+        script(src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js")
         script(src='/components/angular/angular.min.js')
         script(src='/components/angular-cookies/angular-cookies.min.js')
         script(src='/components/angular-ui-router/release/angular-ui-router.min.js')
+        script(src="js/vendor/modernizr-2.6.2.min.js")
         script(src='/js/routingConfig.js')
         script(src='/js/app.js')
         script(src='/js/services.js')
         script(src='/js/controllers.js')
         script(src='/js/filters.js')
         script(src='/js/directives.js')
+        script(src='/js/plugins.js')
+        script(src='/js/json2.js')
+        script(src='/js/ractive/Ractive-legacy.0.3.9.min.js')
+        script(src='/js/instagram.js')
+        script(src='/js/bakfy.js')
 
         // Partial views... Load up front to make transitions smoother
         script(type="text/ng-template", id="404")
