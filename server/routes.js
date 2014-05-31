@@ -55,6 +55,18 @@ var routes = [
         httpMethod: 'GET',
         middleware: [FeedCtrl.getFeedDetails],
         accessLevel: accessLevels.user
+    },
+    {
+        path: '/feeds/list/after',
+        httpMethod: 'GET',
+        middleware: [FeedCtrl.getFeedDetails],
+        accessLevel: accessLevels.user
+    },
+    {
+        path: '/feeds/list/before',
+        httpMethod: 'GET',
+        middleware: [FeedCtrl.getFeedDetails],
+        accessLevel: accessLevels.user
     },    
     // All other get requests should be handled by AngularJS's client-side routing system
     {

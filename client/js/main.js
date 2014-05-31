@@ -5,17 +5,10 @@ query = (window.location.search.length ? window.location.search.slice(1) : 'drib
  //Infinite Scroll Window Bindings.
 var infiniteScrollBinding = function(){
   $(window).scroll(function(evt){
-    //Calculate Window Values on every scroll event.
-    var bod = $('body')[0];
-    pageHeight = bod.offsetHeight;
-    bottomScroll = window.scrollY + bod.clientHeight;
-    distanceToBottom = pageHeight - bottomScroll;
-
     //Load more posts as needed.
-    if(distanceToBottom < 200){
+    if(window.scrollY <= 0){
       insta.load('after');
-    }
-    else if(window.scrollY <= 0){
+    } else if($(window).scrollTop() + $(window).height() == $(document).height()) {
       insta.load('before');
     }
   });

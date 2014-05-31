@@ -38,27 +38,24 @@ var bakfyFeed = Ractive.extend({
         break;
       default:
         throw new Error("Invalid option for get: '" + this.data.get + "'.");
-    }
-    final = "" + base ;
-    if (this.data.clientID != null) {
-      final += "?client_id=" + this.data.clientID;
-    }
-    if (this.data.postsPerPage != null) {
-      final += "&count=" + this.data.postsPerPage;
-    }
+    }    
+    final=base+"?clientID=1";      
     switch(method){
-      case 'before':
-        callback = "&amp;callback=instagramReceiverFrontAppend&amp;min_id="+this.data.instagramData.pagination.min_tag_id;
+      case 'before':        
+        final += "&action=before&min_id="+this.data.instagramData.nextPage;
+        callback = "&amp;callback=instagramReceiverRearAppend&amp;min_id="+this.data.instagramData.nextPage;
         break;
       case 'after':
-        callback = "&amp;callback=instagramReceiverRearAppend&amp;max_id="+this.data.instagramData.pagination.next_max_tag_id;
+        //final=base+"/after?clientID=1";
+        final += "&action=after&max_id="+this.data.instagramData.prevPage;
+        callback = "&amp;callback=instagramReceiverFrontAppend&amp;max_id="+this.data.instagramData.prevPage;
         break;
       case 'replace':
         callback = "&amp;callback=instagramReceiverReplace";
         break;
     }
     console.log(final+callback);
-    return base;
+    return final+callback;
   },
 
  /**
@@ -77,28 +74,28 @@ var bakfyFeed = Ractive.extend({
     }
     else {
       this.set('loading', true);
-    }
-    console.log('calling IG API');
-    
+    }  
     var tag = document.createElement('script');
     tag.id = 'instagram-script-loader';
     tag.onerror = function(){console.log('unable to reach IG API');};
-    tag.src = this.makeQuery(method);
+    tag.src = this.makeQuery(method);    
     var firstScriptTag = document.getElementsByTagName('script')[0];
+    console.log(method);
+    console.log(this.makeQuery(method));
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
   },
 
   /**
    * Endpoint for loading newer photos
    */
-  getNewer: function(){
-    this.load('before');
+  getNewer: function(){    
+    this.load('after');
   },
   /**
    * Endpoint for loading older photos
    */
   getOlder: function(){
-    this.load('after');
+    this.load('before');
   },
 
 
@@ -115,8 +112,6 @@ var bakfyFeed = Ractive.extend({
 
    */
   init: function(options){
-
-
     // Initialize Parameters
     this.data.instagramData = [];
     this.data.current = -1;
@@ -156,21 +151,6 @@ var bakfyFeed = Ractive.extend({
       this.set('loading', false);
       this.dataCallback(data);
       return true;
-      /*if(data.success == false){
-        this.error = true;
-        this.set('message', 'Invalid Client ID');
-        this.dataCallback(data);
-        return false;
-      } else if(data.meta.code == 200){
-        this.error = false;
-        return true;
-      } else {
-        this.error = true;
-        this.set('message', 'Error retrieving IG data.');
-        this.dataCallback(data);
-        console.log(data);
-        return false;
-      }*/
     }
 
     //Replace data.
@@ -178,15 +158,17 @@ var bakfyFeed = Ractive.extend({
       if(newData.response.feeds == undefined){
         this.set('message', 'Sorry no results for #'+this.data.search+" :[");
       } else{        
-        this.set('instagramData', newData.response);
-        //this.set('searched', this.data.search);        
+        this.set('instagramData', newData.response);    
         this.set('message', '');
         this.set('endOfFeed', false);
+        this.data.instagramData.prevPage = newData.response.prevPage;
+        this.data.instagramData.nextPage = newData.response.nextPage;
       }      
       this.dataCallback(newData);
     }
     window.instagramReceiverReplace = (function(obj){
       return function (data) {        
+        console.log(data);
         if(obj.validateData(data)){          
           obj.replaceData(data);
         }
@@ -196,17 +178,18 @@ var bakfyFeed = Ractive.extend({
     //Append data to front of array and update data structure.
     this.frontAppend = function(newData){
       //console.log(newData);
-      if(newData.data.length==0){
+      if(newData.response.feeds.length==0){
         console.log('Nothing to append');
       } else{
         console.log('front Append');
-        this.set('instagramData.data', newData.data.concat(this.data.instagramData.data));
-        this.data.instagramData.pagination.min_tag_id = newData.pagination.min_tag_id;
+        this.set('instagramData.feeds', newData.response.feeds.concat(this.data.instagramData.feeds));
+        this.data.instagramData.prevPage = newData.response.prevPage;
       }
       this.dataCallback(newData);
     }
     window.instagramReceiverFrontAppend = (function(obj){
       return function (data) {
+        console.log(data);
         if(obj.validateData(data)){
           obj.frontAppend(data);
         }
@@ -215,20 +198,19 @@ var bakfyFeed = Ractive.extend({
 
     //Append data to rear and update data structure.
     this.rearAppend = function(newData){
-      console.log('rear Append');
-      console.log(this.data.instagramData);
-      console.log(this.data.instagramData.data);
-      this.set('instagramData.data', this.data.instagramData.data.concat(newData.response.feeds));
+      console.log('rear Append')      
+      this.set('instagramData.feeds', this.data.instagramData.feeds.concat(newData.response.feeds));
       //Set the pagination
-      if(newData.pagination.next_max_tag_id === undefined){
+      if(newData.response.nextPage === undefined){
         this.set('endOfFeed', true);
       } else{
-        this.data.instagramData.pagination.next_max_tag_id = newData.pagination.next_max_tag_id;
+        this.data.instagramData.nextPage = newData.response.nextPage;
       }
       this.dataCallback(newData);
     }
     window.instagramReceiverRearAppend = (function(obj){
       return function (data) {
+        console.log(data);
         if(obj.validateData(data)){
           obj.rearAppend(data);
         }
